@@ -21,7 +21,7 @@ from tensorflow.keras.callbacks import (
 SEED = 42
 IMAGE_SIZE = (224, 224)
 BATCH_SIZE = 32
-DATA_DIR = Path("dataset-resized")
+DATA_DIR = Path("trashnet-dataset-main")
 MODEL_DIR = Path("models")
 MODEL_PATH = MODEL_DIR / "waste_classifier.keras"
 

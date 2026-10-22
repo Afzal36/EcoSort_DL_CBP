@@ -1,19 +1,23 @@
 
-# Python virtual environment
+# Python environments and generated files
 .venv/
-
-# Python cache files
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
-# Secrets
+# Local secrets
 .env
 .streamlit/secrets.toml
 
-# Dataset images
-dataset-resized/
+# Local training datasets
+/dataset-resized/
+/trashnet-dataset-main/
 
-# Trained models and generated model metadata
-models/*.keras
-models/*.h5
-models/*.json
+# Ignore generated model artifacts by default, but keep deployment assets.
+/models/*.keras
+/models/*.h5
+/models/*.json
+!/models/waste_classifier.keras
+!/models/class_names.json

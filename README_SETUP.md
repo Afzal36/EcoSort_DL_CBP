@@ -1,90 +1,49 @@
-# EcoSort — Smart Waste Classification Using CNN
+# EcoSort
 
-A beginner-friendly Streamlit interface for the six-class TrashNet CNN project.
+EcoSort classifies waste images into cardboard, glass, metal, paper, plastic, or trash. The Streamlit app also provides MobileNetV2 feature-map inspection and class-specific Grad-CAM visualizations.
 
-## Features
+## Run locally
 
-- Upload JPG, JPEG, PNG, or WEBP waste images
-- Predict one of six categories: cardboard, glass, metal, paper, plastic, trash
-- Display prediction confidence and a probability chart
-- Show general disposal guidance
-- Train and evaluate the CNN locally
-
-## 1. Open the project in VS Code
-
-Extract this folder and open `EcoSort_VSCode` in VS Code.
-
-Install Python 3.10 or 3.11 (recommended for TensorFlow compatibility).
-
-## 2. Create a virtual environment
-
-Windows PowerShell:
+Use Python 3.12, which matches the tested TensorFlow environment.
 
 ```powershell
-py -3.11 -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-If PowerShell blocks activation, run this in the current terminal only:
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\.venv\Scripts\Activate.ps1
-```
-
-## 3. Download and arrange the TrashNet dataset
-
-Download the TrashNet dataset used by the selected repository. Arrange images like this:
-
-```text
-EcoSort_VSCode/
-├── app.py
-├── train_model.py
-├── requirements.txt
-├── dataset-resized/
-│   ├── cardboard/
-│   ├── glass/
-│   ├── metal/
-│   ├── paper/
-│   ├── plastic/
-│   └── trash/
-└── models/
-```
-
-The training script scans image files inside each class folder. Folder names become the class labels. Do not rename the class folders after training.
-
-## 4. Train the CNN and save the model
-
-In the VS Code terminal:
-
-```powershell
-python train_model.py
-```
-
-Training can take some time depending on your CPU/GPU. It creates:
-
-- `models/waste_classifier.keras`
-- `models/class_names.json`
-- `models/training_history.json`
-- `models/test_metrics.json`
-
-The model is trained locally from the dataset. It is not included in this starter bundle.
-
-## 5. Run the interface
-
-After training finishes:
-
-```powershell
+python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Streamlit prints a local URL, usually `http://localhost:8501`. Open that address in your browser.
+Open the local URL printed by Streamlit, usually `http://localhost:8501`.
+
+## Train or update the model
+
+The training script expects the six class folders under `trashnet-dataset-main/`:
+
+```text
+trashnet-dataset-main/
+├── cardboard/
+├── glass/
+├── metal/
+├── paper/
+├── plastic/
+└── trash/
+```
+
+Run `python train_model.py` from the project directory. Training requires the dataset and downloads MobileNetV2 ImageNet weights. It writes `models/waste_classifier.keras`, `models/class_names.json`, and `models/test_metrics.json`.
+
+The deployed app requires the model and labels at `models/waste_classifier.keras` and `models/class_names.json`. These two files are intentionally included in Git; the dataset and generated metrics are ignored.
+
+## Deploy to Streamlit Community Cloud
+
+1. Push this project to a GitHub repository. Include `app.py`, `requirements.txt`, `.streamlit/config.toml`, `models/waste_classifier.keras`, and `models/class_names.json`. Do not add the dataset or `.venv`.
+2. In Streamlit Community Cloud, create an app from that repository and select `app.py` as the main file.
+3. Choose Python 3.12 in the app's advanced settings, then deploy. The cloud build installs the pinned packages from `requirements.txt`; no secrets are required.
+
+The model file is about 24 MB, within GitHub's regular file-size limit. The app does not train during deployment. To publish a new model, retrain locally and update both the model and its matching class-label file.
 
 ## Notes
 
-- If your dataset folder has a different name, change `DATA_DIR` near the top of `train_model.py`.
-- If the model reports low confidence, try a clear image of one object with good lighting.
-- The output is a model prediction, not a guarantee that an item is recyclable. Follow local disposal rules.
-- This is a starter implementation aligned to the selected repository's six classes and 128×128 CNN workflow. It retrains a compatible CNN using the repository's described architecture; it does not automatically import a trained model from the notebook.
+- The uploaded image limit is 10 MB.
+- Prediction scores and Grad-CAM are model explanations, not guarantees about recyclability or disposal rules.
+- Confirm local recycling guidance before sorting items.
