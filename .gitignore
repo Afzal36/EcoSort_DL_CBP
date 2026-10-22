@@ -1,0 +1,19 @@
+
+# Python virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Dataset images
+dataset-resized/
+
+# Trained models and generated model metadata
+models/*.keras
+models/*.h5
+models/*.json
